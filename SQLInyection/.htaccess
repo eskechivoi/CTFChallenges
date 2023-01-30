@@ -1,0 +1,14 @@
+# Deny access to .htaccess
+<Files .htaccess>
+Order allow,deny
+Deny from all
+</Files>
+
+# Disable directory browsing 
+Options -Indexes
+
+# Deny access to files with extensions .creds and .log
+<FilesMatch "\.(creds|log)$">
+Order allow,deny
+Deny from all
+</FilesMatch>
