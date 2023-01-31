@@ -33,9 +33,9 @@
                 </div>
                 <div class="collapse navbar-collapse" id="myNavbar">
                     <ul class="nav navbar-nav">
-                        <li><a href="#">Pizza</a></li>
-                        <li><a href="#">Pasta tradizionale</a></li>
-                        <li><a href="#">Insalate</a></li>
+                        <li><a href="index.php?category=Pizza">Pizza</a></li>
+                        <li><a href="index.php?category=Pasta">Pasta tradizionale</a></li>
+                        <li><a href="index.php?category=Insalate">Insalate</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a href="#"><span class="glyphicon glyphicon-user"></span> Your Account</a></li>
@@ -45,54 +45,49 @@
             </div>
         </nav>
 
-        <div class="container">    
-        <div class="row">
-            <div class="col-sm-4">
-            <div class="panel panel-primary">
-                <div class="panel-heading">Pizza Tropicale</div>
-                <div class="panel-body"><img src="images/pizza-tropical.jpg" class="img-responsive" style="width:100%" alt="Image"></div>
-                <div class="panel-footer">Nuestra rica pizza de jamón york, queso y piña.</div>
-            </div>
-            </div>
-            <div class="col-sm-4"> 
-            <div class="panel panel-primary">
-                <div class="panel-heading">Pizza 4 Formaggi</div>
-                <div class="panel-body"><img src="images/pizza-4quesos.png" class="img-responsive" style="width:100%" alt="Image"></div>
-                <div class="panel-footer">Para los amantes del queso, ¡traemos nuestra pizza de queso mozzarella, azul, parmesano y ricotta!</div>
-            </div>
-            </div>
-            <div class="col-sm-4"> 
-            <div class="panel panel-primary">
-                <div class="panel-heading">Pizza Prosciutto</div>
-                <div class="panel-body"><img src="images/pizza-prosciutto.png" class="img-responsive" style="width:100%" alt="Image"></div>
-                <div class="panel-footer">¡La pizza más clásica! Una rica combinación de jamón y queso.</div>
-            </div>
-            </div>
-        </div>
-        </div><br>
+        <div class="container">
+        <?php
+            $creds = fopen("sqlusr.creds", "r");
+            $host = "localhost";
+            $usr = fread($creds, 6);
+            fread($creds, 1); //Leer el ':'
+            $pwd = fread($creds, 10);
+            $db = "ctf";
 
-        <div class="container">    
-        <div class="row">
-            <div class="col-sm-4">
-            <div class="panel panel-warning">
-                <div class="panel-heading">Ravioli</div>
-                <div class="panel-body"><img src="images/ravioli.png" class="img-responsive" style="width:100%" alt="Image"></div>
-                <div class="panel-footer">Raviolis rellenos de rico queso parmesano.</div>
-            </div>
-            </div>
-            <div class="col-sm-4"> 
-            <div class="panel panel-success">
-                <div class="panel-heading">Insalate Cesar</div>
-                <div class="panel-body"><img src="images/ensalada_cesar.png" class="img-responsive" style="width:100%" alt="Image"></div>
-                <div class="panel-footer">Rica ensalada con pollo, queso, picatostes, lechuga y nuestra rica salsa Cesar.</div>
-            </div>
-            </div>
-            <?php
-                if(false) {
-                    include("flag.php");
+            $dbconnect = mysqli_connect($host, $usr, $pwd, $db);
+            if ($dbconnect->connect_error) {
+                die("Database connection failed: " . $dbconnect->connect_error);
+            }
+
+            $category = $_GET['category']; //Obtenemos la categoría de los parámetros de la URL.
+            $query = mysqli_query($dbconnect, "SELECT prod.nombre, prod.imagen, prod.descripcion, prod.panel
+            FROM pertenecer pe join producto prod 
+            on pe.precio = prod.precio and pe.nombre_prod = prod.nombre
+            where pe.nombre_cat='$category'") or die (mysqli_error($dbconnect));
+
+            $counter = 0;
+
+            echo "<div class=\"container\">";
+            echo "<div class=\"row\">";
+            while($row = mysqli_fetch_array($query)) {
+                echo "<div class=\"col-sm-4\">";
+                echo "<div class=\"panel panel-" . $row['panel'] . "\">";
+                echo "<div class=\"panel-heading\">" . $row['nombre'] . "</div>";
+                echo "<div class=\"panel-body\"><img src=\"" . $row['imagen'] . "\" class=\"img-responsive\" style=\"width:100%\" alt=\"Image\"></div>";
+                echo "<div class=\"panel-footer\">" . $row['descripcion'] . "</div>";
+                echo "</div>";
+                echo "</div>";
+                $counter = $counter + 1;
+                if($counter == 3) {
+                    $counter = 0;
+                    echo "</div>";
+                    echo "</div><br>";
+                    echo "<div class=\"container\">";
+                    echo "<div class=\"row\">";
                 }
-            ?>
-        </div>
-        </div><br><br>
+            }
+            echo "</div>";
+            echo "</div><br>";
+        ?>    
     </body>
 </html>
