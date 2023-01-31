@@ -45,8 +45,8 @@
             </div>
         </nav>
 
-        <div class="container">
         <?php
+            require("load-images.php");
             $creds = fopen("sqlusr.creds", "r");
             $host = "localhost";
             $usr = fread($creds, 6);
@@ -60,7 +60,7 @@
             }
 
             $category = $_GET['category']; //Obtenemos la categoría de los parámetros de la URL.
-            $query = mysqli_query($dbconnect, "SELECT prod.nombre, prod.imagen, prod.descripcion, prod.panel
+            $query = mysqli_query($dbconnect, "SELECT prod.nombre, prod.descripcion, prod.panel
             FROM pertenecer pe join producto prod 
             on pe.precio = prod.precio and pe.nombre_prod = prod.nombre
             where pe.nombre_cat='$category'") or die (mysqli_error($dbconnect));
@@ -73,7 +73,7 @@
                 echo "<div class=\"col-sm-4\">";
                 echo "<div class=\"panel panel-" . $row['panel'] . "\">";
                 echo "<div class=\"panel-heading\">" . $row['nombre'] . "</div>";
-                echo "<div class=\"panel-body\"><img src=\"" . $row['imagen'] . "\" class=\"img-responsive\" style=\"width:100%\" alt=\"Image\"></div>";
+                echo "<div class=\"panel-body\"><img src=\"" . loadImage($row['nombre']) . "\" class=\"img-responsive\" style=\"width:100%\" alt=\"Image\"></div>";
                 echo "<div class=\"panel-footer\">" . $row['descripcion'] . "</div>";
                 echo "</div>";
                 echo "</div>";
