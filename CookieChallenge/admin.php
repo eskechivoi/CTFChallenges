@@ -11,7 +11,7 @@
       if(session_status() == PHP_SESSION_NONE){ 
         session_start();
       }
-      if($_SESSION['sess_username'] == 'guest'){
+      if($_SESSION['sess_username'] != 'admin'){
         header("HTTP/1.1 403 Forbidden");
         die('Forbidden');
       }
