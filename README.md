@@ -1,3 +1,3 @@
-# CTFChallenges
+# CTF SUGUS 2023 - Challenges & WriteUps
 
-En este repositorio encontrarás el código y las soluciones o 'Writeups' de los retos de Web del CTF SUGUS 2023.
+In this repository, you can download the different challenges in the _web_ category each one having its own subfolder, and you can also download the writeups in the _writeup_ folder.
